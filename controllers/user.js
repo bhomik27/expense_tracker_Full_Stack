@@ -1,43 +1,46 @@
-// Import necessary modules
-const axios = require('axios');
 const User = require('../models/user');
 
-
-// Controller function for handling signup form submission
-async function signup(req, res) {
+const signup = async (req, res) => {
     try {
-        const { name, email, password } = req.body; // Assuming request body contains these fields
+        const { name, email, password } = req.body;
 
-        // Validate the inputs (You might want to add more robust validation here)
         if (!name || !email || !password) {
             return res.status(400).json({ message: 'Name, email, and password are required.' });
         }
 
-        // Check if the email already exists in the database
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
             return res.status(409).json({ message: 'Email already exists. Please use a different email.' });
         }
 
-        // Create a new user in the database using Sequelize model
         const newUser = await User.create({ name, email, password });
 
-        // Post the data to the server using Axios
-        const response = await axios.post('http://your-api-endpoint/signup', {
-            name: newUser.name,
-            email: newUser.email,
-            // Exclude sending the password in response for security reasons
-        });
-
-        // Handle the response from the server as needed
-        console.log('Server response:', response.data);
-
-        // Send a success response to the client
-        return res.status(201).json({ message: 'User signed up successfully!' });
+        return res.status(201).json({ message: 'User signed up successfully!', user: { name: newUser.name, email: newUser.email } });
     } catch (error) {
         console.error('Error during signup:', error);
-        return res.status(500).json({ message: 'Internal server error.' });
+        return res.status(500).json({ message: 'Error during signup process. Please try again later.' });
     }
-}
+};
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
-module.exports = { signup };
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        if (password !== user.password) {
+            return res.status(401).json({ message: 'Incorrect Password.' });
+        }
+
+        return res.status(200).json({ message: 'User login successful!', user: { name: user.name, email: user.email } });
+    } catch (error) {
+        console.error('Error during login:', error);
+        return res.status(500).json({ message: 'Error during login process. Please try again later.' });
+    }
+};
+
+
+module.exports = { signup, login };
