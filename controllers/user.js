@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const signup = async (req, res) => {
@@ -13,14 +14,23 @@ const signup = async (req, res) => {
             return res.status(409).json({ message: 'Email already exists. Please use a different email.' });
         }
 
-        const newUser = await User.create({ name, email, password });
+        const saltRounds = 10; // Adjust the salt rounds as needed
 
-        return res.status(201).json({ message: 'User signed up successfully!', user: { name: newUser.name, email: newUser.email } });
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        const newUser = await User.create({ name, email, password: hashedPassword });
+
+        return res.status(201).json({
+            message: 'User signed up successfully!',
+            user: { name: newUser.name, email: newUser.email }
+        });
     } catch (error) {
         console.error('Error during signup:', error);
         return res.status(500).json({ message: 'Error during signup process. Please try again later.' });
     }
 };
+
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -31,16 +41,21 @@ const login = async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        if (password !== user.password) {
+        // Compare hashed password
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
             return res.status(401).json({ message: 'Incorrect Password.' });
         }
 
-        return res.status(200).json({ message: 'User login successful!', user: { name: user.name, email: user.email } });
+        return res.status(200).json({
+            message: 'User login successful!',
+            user: { name: user.name, email: user.email }
+        });
     } catch (error) {
         console.error('Error during login:', error);
         return res.status(500).json({ message: 'Error during login process. Please try again later.' });
     }
 };
-
 
 module.exports = { signup, login };
