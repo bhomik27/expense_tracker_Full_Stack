@@ -5,6 +5,8 @@ const sequelize = require('./util/database');
 const axios = require('axios');
 
 const userRoutes = require('./routes/user');
+const expenseRoutes = require('./routes/expense');
+
 const app = express();
 
 // Middleware
@@ -14,6 +16,8 @@ app.use(cors()); // Enable CORS for all routes
 
 // Routes
 app.use('/user', userRoutes);
+app.use('/expense', expenseRoutes);
+
 
 sequelize.sync()
     .then(() => {
