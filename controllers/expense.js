@@ -4,9 +4,10 @@ const path = require('path');
 // Get all expenses
 exports.getExpenses = async (req, res, next) => {
     try {
-        const expenses = await Expense.findAll();
+        const expenses = await Expense.findAll({ where: { userId: req.user.id } });
         res.json(expenses);
     } catch (error) {
+        console.log(error);
         console.error('Error fetching expenses:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -14,7 +15,7 @@ exports.getExpenses = async (req, res, next) => {
 
 // Get add expense form
 exports.getAddExpense = (req, res, next) => {
-    const filePath = path.join(__dirname, '../index.html');
+    const filePath = path.join(__dirname, '../expense.html');
     res.sendFile(filePath);
 };
 
@@ -25,7 +26,8 @@ exports.postAddExpense = async (req, res, next) => {
         const newExpense = await Expense.create({
             amount: amount,
             description: description,
-            category: category
+            category: category,
+            userId : req.user.id
         });
         res.status(201).json(newExpense);
         console.log('Expense added:', newExpense);
@@ -59,19 +61,29 @@ exports.editExpense = async (req, res, next) => {
     }
 };
 
-// Delete an expense
 exports.deleteExpense = async (req, res, next) => {
     try {
         const { id } = req.params;
+
         const expense = await Expense.findByPk(id);
 
         if (!expense) {
             return res.status(404).json({ error: 'Expense not found' });
         }
 
-        await expense.destroy();
-        console.log('Expense deleted');
-        res.status(204).end();
+        // Use the 'id' variable instead of 'expenseid'
+        await Expense.destroy({ where: { id: id, userId: req.user.id } })
+            .then((noofrows) => {
+                if (noofrows === 0) {
+                    return res.status(404).json({ success: true, message: 'expense does not belong to the user' });
+                }
+                console.log('Expense deleted');
+                res.status(200).json({ success: true, message: "Deleted successfully" });
+            })
+            .catch(err => {
+                console.error('Error deleting expense:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            });
     } catch (error) {
         console.error('Error deleting expense:', error);
         res.status(500).json({ error: 'Internal Server Error' });

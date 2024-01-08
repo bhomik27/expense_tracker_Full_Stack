@@ -22,10 +22,17 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
 
-
             // Show success message
             const successMessage = document.getElementById('successMessage');
             successMessage.textContent = response.data.message;
+
+            // Prompt user of successful login
+            alert("User successfully logged in!");
+
+            localStorage.setItem('token', response.data.token);
+
+            // Redirect to expense.html after successful login
+            window.location.href = 'expense.html';
 
         } catch (error) {
             if (error.response && error.response.status === 401) {

@@ -1,3 +1,31 @@
+
+//helper function to show success or error message on screen
+function showMessage(message, isSuccess) {
+    const messageDiv = document.createElement('div');
+    messageDiv.textContent = message;
+    messageDiv.style.padding = '10px';
+    messageDiv.style.marginTop = '10px';
+    messageDiv.style.borderRadius = '5px';
+    messageDiv.style.color = isSuccess ? 'green' : 'red';
+    messageDiv.style.backgroundColor = isSuccess ? 'lightgreen' : 'lightcoral';
+    messageDiv.style.position = 'fixed';
+    messageDiv.style.bottom = '10px';
+    messageDiv.style.left = '50%';
+    messageDiv.style.transform = 'translateX(-50%)';
+    messageDiv.style.zIndex = '9999';
+    messageDiv.style.fontSize = '16px';
+
+    document.body.appendChild(messageDiv);
+
+    // Remove the message after 5 seconds
+    setTimeout(() => {
+        document.body.removeChild(messageDiv);
+    }, 5000);
+}
+
+
+
+
 // Function to handle form submission
 async function addExpense(event) {
     try {
@@ -13,14 +41,14 @@ async function addExpense(event) {
             category
         };
 
-        console.log(amount);
-        console.log(description);
-        console.log(category);
+        console.log(userExpense);
 
-        const response = await axios.post("http://localhost:3000/expense/add-expense", userExpense);
+        const token = localStorage.getItem('token');
+
+        const response = await axios.post("http://localhost:3000/expense/add-expense", userExpense, { headers: { "Authorization": token } });
 
         printUserExpense(response.data);
-
+        showMessage('Expense added successfully!', true);
         // Clear input fields after successful submission
         event.target.elements.amount.value = '';
         event.target.elements.description.value = '';
@@ -29,13 +57,16 @@ async function addExpense(event) {
         console.log(response);
     } catch (error) {
         console.error('Error:', error.message);
+        showMessage('Error adding expense. Please try again.', false);
+
     }
 }
 
 // get all expenses and show them on ui
 window.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem('token');
     try {
-        const response = await axios.get("http://localhost:3000/expense/expenses");
+        const response = await axios.get("http://localhost:3000/expense/expenses", { headers: { "Authorization": token } });
         console.log(response);
 
         for (var i = 0; i < response.data.length; i++) {
@@ -43,6 +74,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     } catch (error) {
         console.log('Error:', error.message);
+        showMessage('Error getting expense. Please try again.', false);
+
     }
 });
 
@@ -59,8 +92,10 @@ function printUserExpense(userExpense) {
     deleteButton.style.backgroundColor = 'red';
     deleteButton.onclick = async () => {
         try {
-            await axios.delete(`http://localhost:3000/expense/delete-expense/${userExpense.id}`);
+            const token = localStorage.getItem('token');
+            await axios.delete(`http://localhost:3000/expense/delete-expense/${userExpense.id}`,{ headers: { "Authorization": token } } );
             parentElement.removeChild(childElement);
+            showMessage('Expense Deleted successfully!', true);
         } catch (error) {
             console.error('Error deleting expense:', error.message);
         }
