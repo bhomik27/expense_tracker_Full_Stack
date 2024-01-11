@@ -1,4 +1,3 @@
-
 //helper function to show success or error message on screen
 function showMessage(message, isSuccess) {
     const messageDiv = document.createElement('div');
@@ -131,4 +130,49 @@ function printUserExpense(userExpense) {
     parentElement.appendChild(childElement);
     childElement.appendChild(deleteButton);
     childElement.appendChild(editButton);
+}
+
+document.getElementById('buyPremium').onclick = async function (e) {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.get("http://localhost:3000/purchase/premiummembership", {
+            headers: { "Authorization": token }
+        });
+        console.log(response);
+
+        var options = {
+            "key": response.data.key_id,
+            "order_id": response.data.order.id, 
+            "handler": async function (response) {
+                try {
+                    await axios.post('http://localhost:3000/purchase/updatetransactionstatus', {
+                        order_id: options.order_id,
+                        payment_id: response.razorpay_payment_id,
+                    }, {
+                        headers: { "Authorization": token }
+                    });
+                    alert("You are a premium user now");
+                    showMessage("You are a premium user now", true);
+                } catch (error) {
+                    console.error(error);
+                    alert('Error updating transaction status');
+                    showMessage('Error updating transaction status', false);
+                }
+            }
+        };
+
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
+
+        rzp1.on('payment.failed', function (response) {
+            console.log(response);
+            alert('Payment failed');
+            showMessage('Payment failed', false);
+        });
+    } catch (error) {
+        console.error(error);
+        alert('Error purchasing premium membership');
+        showMessage('Error purchasing premium membership', false);
+    }
 }

@@ -23,7 +23,19 @@
     background: #f4f4f4;
     padding: 1rem;
     text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
   }
+  button {
+    margin-left: auto;
+    background-color: rgb(241, 75, 75);
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 2px 2px 2px 2px;
+
+}
   
   .container {
     margin: auto;

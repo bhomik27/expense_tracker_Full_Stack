@@ -6,7 +6,7 @@ const authenticate = (req, res, next) => {
 
     try {
         const token = req.header('Authorization');
-        console.log(token);
+        // console.log(token);
 
         const user = jwt.verify(token, 'irawhseham');
         console.log("USERID <<<<<<<<",user.userId);

@@ -1,25 +1,45 @@
-async function signUp(event) {
-    event.preventDefault(); // Corrected case
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('signupForm');
+    form.addEventListener('submit', signup);
 
-    try {
-        let name = document.getElementById('name').value;
-        let email = document.getElementById('email').value;
-        let password = document.getElementById('password').value;
+    async function signup(event) {
+        event.preventDefault();
 
-        let SignupData = {
-            name,
-            email,
-            password
-        };
+        try {
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
 
-        const response = await axios.post("http://localhost:3000/user/signup", SignupData);
-        console.log(response);
+            let signupData = {
+                name,
+                email,
+                password
+            };
+
+            const response = await axios.post("http://localhost:3000/user/signup", signupData);
+
+            console.log(response.data); // Logging response data
+
+            // Clear input fields after successful signup
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = response.data.message;
+
+            // Optionally, redirect the user to another page after successful signup
+            // window.location.href = '/success'; // Redirect to success page
+
+        } catch (error) {
+            if (error.response.status === 409) {
+                // If the status code is 409 (User already exists), show the message on the screen
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = error.response.data.message; // Displaying the error message
+            } else {
+                console.error(error.response.data); // Log other errors to the console
+            }
+        }
     }
-    catch(error) {
-        console.log(error);
-    }
-}
-
-// Attaching signUp function to form submission event
-const form = document.querySelector('form'); // Assuming there's only one form in the document
-form.addEventListener('submit', signUp);
+});

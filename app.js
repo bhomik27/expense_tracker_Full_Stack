@@ -1,13 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // Import cors
+const cors = require('cors'); 
 const sequelize = require('./util/database');
 const axios = require('axios');
+const env = require('dotenv').config();
+
 
 const userRoutes = require('./routes/user');
 const expenseRoutes = require('./routes/expense');
+const purchaseRoutes = require('./routes/purchase');
+
+
 const Expense = require('./models/expense');
 const User = require('./models/user');
+const Order = require('./models/order');
+
 
 const app = express();
 
@@ -19,11 +26,15 @@ app.use(cors()); // Enable CORS for all routes
 // Routes
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
+app.use('/purchase', purchaseRoutes);
 
 //realation between user and expense table
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
+//realation between user and order table
+User.hasMany(Order);
+Order.belongsTo(User);
 
 sequelize.sync()
     .then(() => {
