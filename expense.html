@@ -13,11 +13,13 @@
         <link rel="stylesheet" href="expense.css" />
     </head>
     <body>
-        <header>
+        <header id="header">
             <h1>Expense Tracker</h1>
-            <button id="buyPremium">Buy Premium Memebership</button>
+            <div id="premiumStatus"></div>
+            <button id="premiumButton">Buy Premium Membership</button>
             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         </header>
+        
 
         <section class="container">
             <form id="my-form" onsubmit="addExpense(event)">
@@ -47,6 +49,8 @@
             <ul id="expense">
                 <div class="userExpense" id="userExpense"></div>
             </ul>
+
+            <div id="leaderboard"></div>
 
             <script
                 src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>

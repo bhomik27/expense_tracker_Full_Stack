@@ -2,6 +2,10 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
+const generateAccessToken = (id, name) => {
+    return jwt.sign({ userId: id, name: name }, 'irawhseham');
+};
+
 const signup = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -32,13 +36,6 @@ const signup = async (req, res) => {
     }
 };
 
-
-function generateAccessToken(id, name) {
-    return jwt.sign({ userId: id, name: name }, 'irawhseham');
-}
-
-
-
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -57,7 +54,7 @@ const login = async (req, res) => {
         }
 
         return res.status(200).json({
-            success : true,
+            success: true,
             message: 'User login successful!',
             token: generateAccessToken(user.id, user.name)
         });
@@ -67,4 +64,24 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { signup, login };
+const checkPremiumStatus = async (req, res) => {
+    try {
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, 'irawhseham'); 
+
+        const userId = decodedToken.userId;
+
+        const user = await User.findByPk(userId);
+
+        if (user) {
+            res.status(200).json({ isPremiumUser: user.ispremiumuser });
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+module.exports = { signup, login, checkPremiumStatus };

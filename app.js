@@ -9,6 +9,7 @@ const env = require('dotenv').config();
 const userRoutes = require('./routes/user');
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
+const premiumRoutes = require('./routes/premium');
 
 
 const Expense = require('./models/expense');
@@ -27,6 +28,7 @@ app.use(cors()); // Enable CORS for all routes
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
+app.use('/premium', premiumRoutes);
 
 //realation between user and expense table
 User.hasMany(Expense);

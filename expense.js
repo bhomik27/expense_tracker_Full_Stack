@@ -76,6 +76,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         showMessage('Error getting expense. Please try again.', false);
 
     }
+    await checkPremiumStatus();
 });
 
 function printUserExpense(userExpense) {
@@ -87,12 +88,15 @@ function printUserExpense(userExpense) {
     const deleteButton = document.createElement('input');
     deleteButton.type = 'button';
     deleteButton.value = 'Delete';
+    deleteButton.id = 'Delete';
     deleteButton.style.fontWeight = 'bold';
     deleteButton.style.backgroundColor = 'red';
+    deleteButton.style.margin = '10px';
+    deleteButton.style.border
     deleteButton.onclick = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:3000/expense/delete-expense/${userExpense.id}`,{ headers: { "Authorization": token } } );
+            await axios.delete(`http://localhost:3000/expense/delete-expense/${userExpense.id}`, { headers: { "Authorization": token } });
             parentElement.removeChild(childElement);
             showMessage('Expense Deleted successfully!', true);
         } catch (error) {
@@ -103,8 +107,10 @@ function printUserExpense(userExpense) {
     const editButton = document.createElement('input');
     editButton.type = 'button';
     editButton.value = 'Edit';
+    editButton.id = 'Edit';
     editButton.style.fontWeight = 'bold';
     editButton.style.backgroundColor = 'green';
+    editButton.style.margin = '10px';
 
     editButton.onclick = async () => {
         const updatedAmount = prompt("Enter updated amount:", userExpense.amount);
@@ -132,7 +138,7 @@ function printUserExpense(userExpense) {
     childElement.appendChild(editButton);
 }
 
-document.getElementById('buyPremium').onclick = async function (e) {
+document.getElementById('premiumButton').onclick = async function (e) {
     const token = localStorage.getItem('token');
     try {
         const response = await axios.get("http://localhost:3000/purchase/premiummembership", {
@@ -142,7 +148,7 @@ document.getElementById('buyPremium').onclick = async function (e) {
 
         var options = {
             "key": response.data.key_id,
-            "order_id": response.data.order.id, 
+            "order_id": response.data.order.id,
             "handler": async function (response) {
                 try {
                     await axios.post('http://localhost:3000/purchase/updatetransactionstatus', {
@@ -151,7 +157,7 @@ document.getElementById('buyPremium').onclick = async function (e) {
                     }, {
                         headers: { "Authorization": token }
                     });
-                    alert("You are a premium user now");
+                    await checkPremiumStatus();
                     showMessage("You are a premium user now", true);
                 } catch (error) {
                     console.error(error);
@@ -165,14 +171,66 @@ document.getElementById('buyPremium').onclick = async function (e) {
         rzp1.open();
         e.preventDefault();
 
-        rzp1.on('payment.failed', function (response) {
+        rzp1.on('payment.failed', async function (response) {
             console.log(response);
             alert('Payment failed');
             showMessage('Payment failed', false);
+
         });
     } catch (error) {
         console.error(error);
         alert('Error purchasing premium membership');
         showMessage('Error purchasing premium membership', false);
     }
+}
+
+
+
+//function to check premium status 
+async function checkPremiumStatus() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.get("http://localhost:3000/user/premium-status", {
+            headers: { "Authorization": token }
+        });
+
+        const premiumStatusDiv = document.getElementById('premiumStatus');
+        if (response.data.isPremiumUser) {
+            premiumStatusDiv.textContent = 'You are a Premium User';
+            premiumStatusDiv.style.color = 'green';
+            // Hide the premium button if the user is premium
+            document.getElementById('premiumButton').style.display = 'none';
+
+
+            // Create a "Show Leaderboard" button
+            const leaderboardButton = document.createElement('button');
+            leaderboardButton.textContent = 'Leaderboard';
+            leaderboardButton.id = 'leaderboardButton'; // Set the id
+            leaderboardButton.addEventListener('click', showLeaderboard);
+            document.getElementById('header').appendChild(leaderboardButton);
+
+        } else {
+            // Show the premium button if the user is not premium
+            document.getElementById('premiumButton').style.display = 'block';
+        }
+    } catch (error) {
+        console.error(error);
+        alert('Error checking premium status');
+        showMessage('Error checking premium status', false);
+    }
+}
+
+
+//function to show the leaderboard
+async function showLeaderboard() {
+    const token = localStorage.getItem('token');
+    const leaderboardArray = await axios.get('http://localhost:3000/premium/showleaderboard', { headers: { "Authorization": token } });
+    console.log(leaderboardArray);
+
+
+    var leaderboardElem = document.getElementById('leaderboard');
+    leaderboardElem.innerHTML += '<h1> Leader-Board</h1>'
+    leaderboardArray.data.forEach((userDetails) => {
+        leaderboardElem.innerHTML += `<li> Name - ${userDetails.name} Total Expense - ${userDetails.totalexpense}</li>`
+    })
 }
