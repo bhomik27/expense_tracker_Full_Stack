@@ -5,22 +5,25 @@ const sequelize = require('../util/database');
 
 const getLeaderboard = async (req, res) => {
     try {
-        const users = await User.findAll();
-        const expenses = await Expense.findAll();
+        const users = await User.findAll({
+            attributes: ['id', 'name']
+        });
+
+        const expenses = await Expense.findAll({
+            attributes: ['userId', [sequelize.fn('sum', sequelize.col('amount')), 'TotalExpense']],
+            group: ['userId']
+        });
+
         const userTotalExpense = {};
 
         expenses.forEach((expense) => {
-            if (userTotalExpense[expense.userId]) {
-                userTotalExpense[expense.userId] += expense.amount;
-            } else {
-                userTotalExpense[expense.userId] = expense.amount;
-            }
+            userTotalExpense[expense.userId] = expense.dataValues.TotalExpense;
         });
 
-        var userLeaderboardDetails = [];
-        users.forEach((user) => {
-            userLeaderboardDetails.push({ name: user.name, totalexpense: userTotalExpense[user.id] || 0 });
-        });
+        const userLeaderboardDetails = users.map((user) => ({
+            name: user.name,
+            totalexpense: userTotalExpense[user.id] || 0
+        }));
 
         // Sort the userLeaderboardDetails array by totalexpense in descending order
         userLeaderboardDetails.sort((a, b) => b.totalexpense - a.totalexpense);
