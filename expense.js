@@ -220,17 +220,81 @@ async function checkPremiumStatus() {
     }
 }
 
+// Function to show the leaderboard
+let isLeaderboardVisible = false; // Add this variable to keep track of leaderboard visibility
 
-//function to show the leaderboard
 async function showLeaderboard() {
+    // Check if the leaderboard is already visible
+    if (isLeaderboardVisible) {
+        console.log('Leaderboard is already visible.');
+        return;
+    }
+
+    // Hide the expense container, form, ul, and li items
+    const expenseContainer = document.getElementById('expense');
+    const expenseForm = document.getElementById('my-form');
+    const leaderboardContainer = document.getElementById('leaderboard');
+
+    expenseContainer.style.display = 'none';
+    expenseForm.style.display = 'none';
+    leaderboardContainer.style.display = 'block';
+
     const token = localStorage.getItem('token');
-    const leaderboardArray = await axios.get('http://localhost:3000/premium/showleaderboard', { headers: { "Authorization": token } });
-    console.log(leaderboardArray);
+    try {
+        const leaderboardArray = await axios.get('http://localhost:3000/premium/showleaderboard', { headers: { "Authorization": token } });
+        console.log(leaderboardArray);
 
+        // Clear the leaderboard container
+        leaderboardContainer.innerHTML = '';
 
-    var leaderboardElem = document.getElementById('leaderboard');
-    leaderboardElem.innerHTML += '<h1> Leader-Board</h1>'
-    leaderboardArray.data.forEach((userDetails) => {
-        leaderboardElem.innerHTML += `<li> Name - ${userDetails.name} Total Expense - ${userDetails.totalexpense}</li>`
-    })
+        // Create and append the leaderboard table
+        leaderboardContainer.appendChild(createLeaderboardTable(leaderboardArray.data));
+
+        // Set the flag to true to indicate that the leaderboard is now visible
+        isLeaderboardVisible = true;
+    } catch (error) {
+        console.error(error);
+        alert('Error fetching and displaying leaderboard');
+        showMessage('Error fetching and displaying leaderboard', false);
+    }
+}
+
+// Function to create the leaderboard table
+function createLeaderboardTable(leaderboardData) {
+    const table = document.createElement('table');
+    table.id = 'leaderboard-table';
+
+    // Create the table header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = ['Name', 'Total Expense'];
+
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create the table body
+    const tbody = document.createElement('tbody');
+
+    leaderboardData.forEach(userData => {
+        const row = document.createElement('tr');
+        const columns = [userData.name, userData.total_cost]; // Adjust property names based on your server response
+
+        columns.forEach(columnText => {
+            const td = document.createElement('td');
+            td.textContent = columnText;
+            row.appendChild(td);
+        });
+
+        tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+
+    return table;
 }
