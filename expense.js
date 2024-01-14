@@ -283,7 +283,7 @@ function createLeaderboardTable(leaderboardData) {
 
     leaderboardData.forEach(userData => {
         const row = document.createElement('tr');
-        const columns = [userData.name, userData.total_cost]; // Adjust property names based on your server response
+        const columns = [userData.name, userData.totalExpenses]; // Adjust property names based on your server response
 
         columns.forEach(columnText => {
             const td = document.createElement('td');

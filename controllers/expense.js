@@ -1,4 +1,6 @@
 const Expense = require('../models/expense');
+const User = require('../models/user');
+
 const path = require('path');
 
 // Get all expenses
@@ -27,8 +29,17 @@ exports.postAddExpense = async (req, res, next) => {
             amount: amount,
             description: description,
             category: category,
-            userId : req.user.id
+            userId: req.user.id
         });
+
+        const totalExpense = Number(req.user.totalExpenses) + Number(newExpense.amount);
+
+        // Use update method with the correct where clause to update the specific user
+        await User.update(
+            { totalExpenses: totalExpense },
+            { where: { id: req.user.id } }
+        );
+
         res.status(201).json(newExpense);
         console.log('Expense added:', newExpense);
     } catch (error) {
@@ -36,6 +47,7 @@ exports.postAddExpense = async (req, res, next) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 // Edit an expense
 exports.editExpense = async (req, res, next) => {
