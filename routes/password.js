@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const passwordController = require('../controllers/password');
 
-// Define routes for user signup
-router.post('/forgotpassword', passwordController.getresetPassword);
+router.post('/updatepassword/:resetpasswordid', passwordController.updatepassword);
 
+router.get('/resetpassword/:id', passwordController.resetpassword);
 
+router.post('/forgotpassword', passwordController.forgotpassword);
 
 module.exports = router;
+
+
