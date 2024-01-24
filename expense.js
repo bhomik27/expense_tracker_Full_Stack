@@ -63,6 +63,7 @@ async function addExpense(event) {
 
 // get all expenses and show them on ui
 window.addEventListener("DOMContentLoaded", async () => {
+
     const token = localStorage.getItem('token');
     try {
         const response = await axios.get("http://localhost:3000/expense/expenses", { headers: { "Authorization": token } });
@@ -77,6 +78,15 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     }
     await checkPremiumStatus();
+    const report_btn = document.createElement('button');
+    report_btn.appendChild(document.createTextNode('Show Report'));
+    report_btn.setAttribute('id', 'report');
+    document.getElementById('premiumStatus').appendChild(report_btn);
+
+    report_btn.onclick = async function () {
+        window.location.href = 'report.html';
+    };
+
 });
 
 function printUserExpense(userExpense) {
@@ -196,7 +206,7 @@ async function checkPremiumStatus() {
 
         const premiumStatusDiv = document.getElementById('premiumStatus');
         if (response.data.isPremiumUser) {
-            premiumStatusDiv.textContent = 'You are a Premium User';
+            // premiumStatusDiv.textContent = 'You are a Premium User';
             premiumStatusDiv.style.color = 'green';
             // Hide the premium button if the user is premium
             document.getElementById('premiumButton').style.display = 'none';
@@ -298,3 +308,5 @@ function createLeaderboardTable(leaderboardData) {
 
     return table;
 }
+
+
