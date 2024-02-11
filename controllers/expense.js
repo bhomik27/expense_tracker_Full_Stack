@@ -1,10 +1,44 @@
+const axios = require('axios');
 const Expense = require('../models/expense');
 const User = require('../models/user');
 const sequelize = require('../util/database');
 const path = require('path');
+const UserServices = require('../services/userservices');
+const S3services = require('../services/S3services');
+const downloadedFiles = require('../models/downloadedFiles');
+
+
+
+//download expense
+const downloadExpense = async (req, res) => {
+    try {
+        const expenses = await UserServices.getExpenses(req);
+        console.log(expenses);
+
+        const stringifiedExpenses = JSON.stringify(expenses);
+
+        const userId = req.user.id;
+
+        const filename = `Expense${userId}/${new Date()}.txt`;
+        const fileURl = await S3services.uploadToS3(stringifiedExpenses, filename);
+        console.log(fileURl);
+        await downloadedFiles.create({
+            userId: userId,
+            fileURl: fileURl
+        });
+        res.status(200).json({ fileURl, success: true })
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ fileURl, success: true, err: err });
+
+    }
+}
+
+
 
 // Get all expenses
-exports.getExpenses = async (req, res, next) => {
+const getExpenses = async (req, res, next) => {
     try {
         const expenses = await Expense.findAll({ where: { userId: req.user.id } });
         res.json(expenses);
@@ -15,15 +49,15 @@ exports.getExpenses = async (req, res, next) => {
 };
 
 // Get add expense form
-exports.getAddExpense = (req, res, next) => {
+const getAddExpense = (req, res, next) => {
     const filePath = path.join(__dirname, '../expense.html');
     res.sendFile(filePath);
 };
 
 // Add a new expense
-exports.postAddExpense = async (req, res, next) => {
+const postAddExpense = async (req, res, next) => {
     const t = await sequelize.transaction();
-    
+
     try {
         const { amount, description, category } = req.body;
         const newExpense = await Expense.create({
@@ -51,7 +85,7 @@ exports.postAddExpense = async (req, res, next) => {
     }
 };
 // Edit an expense
-exports.editExpense = async (req, res, next) => {
+const editExpense = async (req, res, next) => {
     const t = await sequelize.transaction();
 
     try {
@@ -90,7 +124,7 @@ exports.editExpense = async (req, res, next) => {
 };
 
 // Delete an expense
-exports.deleteExpense = async (req, res, next) => {
+const deleteExpense = async (req, res, next) => {
     const t = await sequelize.transaction();
 
     try {
@@ -133,3 +167,42 @@ exports.deleteExpense = async (req, res, next) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
+// const GetAllFiles = async (req, res) => {
+//     try {
+//         const files = await downloadedFiles.findAll({ where: { userId: req.user.id } });
+//         res.status(200).json(files);
+//     } catch (error) {
+//         console.error('Error fetching downloaded files:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// };
+
+
+
+const GetAllFiles = async (req, res) => {
+    try {
+        const files = await downloadedFiles.findAll({
+            attributes: ['fileUrl', 'createdAt'], // Specify the attributes to retrieve
+            where: { userId: req.user.id }
+        });
+
+        res.status(200).json(files);
+    } catch (error) {
+        console.error('Error fetching downloaded files:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
+module.exports = {
+    getExpenses,
+    getAddExpense,
+    postAddExpense,
+    editExpense,
+    deleteExpense,
+    downloadExpense,
+    GetAllFiles
+}

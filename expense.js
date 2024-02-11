@@ -78,6 +78,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     }
     await checkPremiumStatus();
+    
     const report_btn = document.createElement('button');
     report_btn.appendChild(document.createTextNode('Show Report'));
     report_btn.setAttribute('id', 'report');
@@ -196,7 +197,7 @@ document.getElementById('premiumButton').onclick = async function (e) {
 
 
 
-//function to check premium status 
+//function to check premium status
 async function checkPremiumStatus() {
     const token = localStorage.getItem('token');
     try {
@@ -308,5 +309,6 @@ function createLeaderboardTable(leaderboardData) {
 
     return table;
 }
+
 
 

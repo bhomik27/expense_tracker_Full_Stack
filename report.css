@@ -72,3 +72,16 @@ tr:nth-child(even) {
         margin: 10px auto;
     }
 }
+
+
+/* Style for the View Previous Downloads button */
+#previousDownlaods {
+    background-color: #d23317; /* Green button background color */
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto; /* Center the button on the page */
+}
