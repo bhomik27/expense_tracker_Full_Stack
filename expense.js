@@ -64,19 +64,19 @@ async function addExpense(event) {
 // get all expenses and show them on ui
 window.addEventListener("DOMContentLoaded", async () => {
 
-    const token = localStorage.getItem('token');
-    try {
-        const response = await axios.get("http://localhost:3000/expense/expenses", { headers: { "Authorization": token } });
-        console.log(response);
+    // const token = localStorage.getItem('token');
+    // try {
+    //     const response = await axios.get("http://localhost:3000/expense/expenses", { headers: { "Authorization": token } });
+    //     console.log(response);
 
-        for (var i = 0; i < response.data.length; i++) {
-            printUserExpense(response.data[i]);
-        }
-    } catch (error) {
-        console.log('Error:', error.message);
-        showMessage('Error getting expense. Please try again.', false);
+    //     for (var i = 0; i < response.data.length; i++) {
+    //         printUserExpense(response.data[i]);
+    //     }
+    // } catch (error) {
+    //     console.log('Error:', error.message);
+    //     showMessage('Error getting expense. Please try again.', false);
 
-    }
+    // }
     await checkPremiumStatus();
     
     const report_btn = document.createElement('button');
@@ -87,9 +87,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     report_btn.onclick = async function () {
         window.location.href = 'report.html';
     };
+    await fetchExpenses(currentPage, limit);
 
 });
 
+
+//function to show expenses on UI
 function printUserExpense(userExpense) {
     const parentElement = document.getElementById('expense');
     const childElement = document.createElement('li');
@@ -103,12 +106,15 @@ function printUserExpense(userExpense) {
     deleteButton.style.fontWeight = 'bold';
     deleteButton.style.backgroundColor = 'red';
     deleteButton.style.margin = '10px';
-    deleteButton.style.border
     deleteButton.onclick = async () => {
         try {
             const token = localStorage.getItem('token');
             await axios.delete(`http://localhost:3000/expense/delete-expense/${userExpense.id}`, { headers: { "Authorization": token } });
-            parentElement.removeChild(childElement);
+            childElement.classList.add('slide-out'); // Add class for sliding out
+            // Delay removal to allow transition to complete
+            setTimeout(() => {
+                parentElement.removeChild(childElement);
+            }, 300);
             showMessage('Expense Deleted successfully!', true);
         } catch (error) {
             console.error('Error deleting expense:', error.message);
@@ -135,7 +141,8 @@ function printUserExpense(userExpense) {
         };
 
         try {
-            await axios.put(`http://localhost:3000/expense/edit-expense/${userExpense.id}`, updatedUserExpenseData);
+            const token = localStorage.getItem('token');
+            await axios.put(`http://localhost:3000/expense/edit-expense/${userExpense.id}`, updatedUserExpenseData, { headers: { "Authorization": token } });
             // Update UI with updated expense details
             childElement.innerHTML = `Amount: ${updatedUserExpenseData.amount} <br> Description: ${updatedUserExpenseData.description} <br> Category: ${updatedUserExpenseData.category} <br>`;
             childElement.appendChild(deleteButton);
@@ -144,10 +151,19 @@ function printUserExpense(userExpense) {
             console.error('Error updating expense:', error.message);
         }
     };
+
     parentElement.appendChild(childElement);
     childElement.appendChild(deleteButton);
     childElement.appendChild(editButton);
+
+    // Trigger animation by adding a class
+    childElement.classList.add('animate');
 }
+
+
+
+
+
 
 document.getElementById('premiumButton').onclick = async function (e) {
     const token = localStorage.getItem('token');
@@ -294,7 +310,7 @@ function createLeaderboardTable(leaderboardData) {
 
     leaderboardData.forEach(userData => {
         const row = document.createElement('tr');
-        const columns = [userData.name, userData.totalExpenses]; // Adjust property names based on your server response
+        const columns = [userData.name, userData.totalExpenses]; 
 
         columns.forEach(columnText => {
             const td = document.createElement('td');
@@ -312,3 +328,78 @@ function createLeaderboardTable(leaderboardData) {
 
 
 
+
+
+
+// Define global variables for pagination
+let currentPage = 1;
+const limit = 10; // Number of expenses per page
+let totalPages = 0;
+
+// Function to fetch expenses with pagination
+async function fetchExpenses(page, limit) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://localhost:3000/expense/expenses?page=${page}&limit=${limit}`, {
+            headers: { "Authorization": token }
+        });
+
+        console.log(response);
+
+        // Clear the expense list before adding new items
+        const expenseList = document.getElementById('expense');
+        expenseList.innerHTML = '';
+
+        for (var i = 0; i < response.data.expenses.length; i++) {
+            printUserExpense(response.data.expenses[i]);
+        }
+
+        // Update total pages based on response
+        totalPages = response.data.totalPages;
+
+        // Update pagination UI based on total pages
+        updatePaginationUI(currentPage, totalPages);
+    } catch (error) {
+        console.log('Error:', error.message);
+        showMessage('Error getting expenses. Please try again.', false);
+    }
+}
+
+// Function to update pagination UI
+function updatePaginationUI(currentPage, totalPages) {
+    const prevPageButton = document.getElementById('prevPageButton');
+    const nextPageButton = document.getElementById('nextPageButton');
+    const pageNumberInput = document.getElementById('pageNumberInput');
+
+    // Enable or disable Previous Page Button based on current page
+    prevPageButton.disabled = currentPage === 1;
+
+    // Enable or disable Next Page Button based on current page and total pages
+    nextPageButton.disabled = currentPage === totalPages || totalPages === 0;
+
+    // Update the page number input field
+    pageNumberInput.value = currentPage;
+}
+
+// Event listener for pagination controls
+document.getElementById('nextPageButton').addEventListener('click', async () => {
+    if (currentPage < totalPages) {
+        currentPage++; // Increment current page
+        await fetchExpenses(currentPage, limit);
+    }
+});
+
+document.getElementById('prevPageButton').addEventListener('click', async () => {
+    if (currentPage > 1) {
+        currentPage--; // Decrement current page
+        await fetchExpenses(currentPage, limit);
+    }
+});
+
+document.getElementById('pageNumberButton').addEventListener('click', async () => {
+    const selectedPage = parseInt(document.getElementById('pageNumberInput').value);
+    if (selectedPage >= 1 && selectedPage <= totalPages) {
+        currentPage = selectedPage;
+        await fetchExpenses(currentPage, limit);
+    }
+});

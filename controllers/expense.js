@@ -38,15 +38,43 @@ const downloadExpense = async (req, res) => {
 
 
 // Get all expenses
+// const getExpenses = async (req, res, next) => {
+//     try {
+//         const expenses = await Expense.findAll({ where: { userId: req.user.id } });
+//         res.json(expenses);
+//     } catch (error) {
+//         console.error('Error fetching expenses:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// };
+
+// Modify the getExpenses controller to handle pagination
 const getExpenses = async (req, res, next) => {
     try {
-        const expenses = await Expense.findAll({ where: { userId: req.user.id } });
-        res.json(expenses);
+        const page = parseInt(req.query.page) || 1; // Get the page parameter from query string, default to 1 if not provided
+        const limit = parseInt(req.query.limit) || 10; // Get the limit parameter from query string, default to 10 if not provided
+
+        const offset = (page - 1) * limit;
+
+        const expenses = await Expense.findAndCountAll({
+            where: { userId: req.user.id },
+            limit: limit,
+            offset: offset,
+            order: [['createdAt', 'DESC']] // Assuming you want to order by createdAt field
+        });
+
+        const totalPages = Math.ceil(expenses.count / limit);
+
+        res.json({ expenses: expenses.rows, totalPages });
     } catch (error) {
         console.error('Error fetching expenses:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
+
+
 
 // Get add expense form
 const getAddExpense = (req, res, next) => {
@@ -84,6 +112,8 @@ const postAddExpense = async (req, res, next) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
 // Edit an expense
 const editExpense = async (req, res, next) => {
     const t = await sequelize.transaction();
@@ -122,6 +152,10 @@ const editExpense = async (req, res, next) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
+
+
 
 // Delete an expense
 const deleteExpense = async (req, res, next) => {
@@ -168,16 +202,6 @@ const deleteExpense = async (req, res, next) => {
     }
 };
 
-
-// const GetAllFiles = async (req, res) => {
-//     try {
-//         const files = await downloadedFiles.findAll({ where: { userId: req.user.id } });
-//         res.status(200).json(files);
-//     } catch (error) {
-//         console.error('Error fetching downloaded files:', error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };
 
 
 
