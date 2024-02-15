@@ -52,7 +52,7 @@ const downloadExpense = async (req, res) => {
 const getExpenses = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1; // Get the page parameter from query string, default to 1 if not provided
-        const limit = parseInt(req.query.limit) || 10; // Get the limit parameter from query string, default to 10 if not provided
+        const limit = parseInt(req.query.limit) || 5; // Get the limit parameter from query string, default to 5 if not provided
 
         const offset = (page - 1) * limit;
 
@@ -71,7 +71,6 @@ const getExpenses = async (req, res, next) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 
 
 

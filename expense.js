@@ -336,10 +336,20 @@ let currentPage = 1;
 const limit = 10; // Number of expenses per page
 let totalPages = 0;
 
+// Define a global variable to store the number of expenses per page
+let expensesPerPage = localStorage.getItem('expensesPerPage') || 10;
+
 // Function to fetch expenses with pagination
+
 async function fetchExpenses(page, limit) {
     try {
+        // Update the limit to use the user's preference
+        const limit = parseInt(expensesPerPage);
+
+
         const token = localStorage.getItem('token');
+
+        // Fetch expenses with the updated limit
         const response = await axios.get(`http://localhost:3000/expense/expenses?page=${page}&limit=${limit}`, {
             headers: { "Authorization": token }
         });
@@ -364,6 +374,9 @@ async function fetchExpenses(page, limit) {
         showMessage('Error getting expenses. Please try again.', false);
     }
 }
+
+
+
 
 // Function to update pagination UI
 function updatePaginationUI(currentPage, totalPages) {
