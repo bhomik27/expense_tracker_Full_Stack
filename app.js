@@ -1,9 +1,16 @@
+const path = require('path');
 const express = require('express');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
 const sequelize = require('./util/database');
 const axios = require('axios');
 const env = require('dotenv').config();
+const helmet = require('helmet');
+// const compression = require('compression');
+const morgan = require('morgan');
+
+
 
 
 const userRoutes = require('./routes/user');
@@ -22,10 +29,21 @@ const downloadedFiles = require('./models/downloadedFiles');
 
 const app = express();
 
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
+    { flags: 'a' }
+);
+
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS for all routes
+
+
+
+app.use(helmet());
+// app.use(compression());
+app.use(morgan('combined',{stream : accessLogStream}));
 
 // Routes
 app.use('/user', userRoutes);
