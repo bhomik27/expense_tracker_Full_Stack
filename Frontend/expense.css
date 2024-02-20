@@ -1,0 +1,321 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+  background-color: #2c3e50;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  align-content: center;
+  width: 100%;
+  padding-left: 0px;
+  margin-top: 15px;
+}
+
+ul li {
+  position: relative; /* Add position relative */
+  padding: 0px;
+  background: #a6cbef;
+  margin: 5px 0;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out; 
+}
+
+ul li:hover {
+  transform: scale(1.05); /* Scale up on hover */
+}
+
+ul li.animate {
+  animation: slideIn 0.5s ease forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+ul li button {
+  position: absolute; /* Add position absolute */
+  top: 5px; /* Adjust top position */
+  right: 5px; /* Adjust right position */
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+ul li button#Edit {
+  background-color: #3498db;
+  color: #fff;
+}
+
+ul li button#Delete {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+
+header {
+  background: #2ecc71;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+h1 {
+  margin-bottom: 10px;
+  color: white;
+  background-color: #2c3e50;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px 12px 12px 12px;
+}
+
+
+button {
+  margin-top: 10px;
+  background-color: rgb(241, 75, 75);
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 2px 10px;
+}
+
+/* Add keyframes for sliding out */
+@keyframes slideOut {
+  0% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Apply animation to the list item */
+#expense li.slide-out {
+  animation: slideOut 0.5s forwards;
+}
+
+
+
+
+#premiumStatus {
+  margin-top: 10px;
+  text-align: center;
+}
+
+#premiumButton {
+  background-color: rgb(241, 75, 75);
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 2px 10px;
+}
+
+#premiumButton:hover {
+  background-color: #f05757;
+}
+
+#leaderboardButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#leaderboardButton:hover {
+  background-color: #45a049;
+}
+
+.container {
+  margin: auto;
+  width: 500px;
+  overflow: auto;
+  padding: 3rem 2rem;
+}
+
+#my-form {
+  padding: 2rem;
+  background: #2ecc71;
+  border-radius: 7px;;
+}
+
+#my-form label {
+  display: block;
+}
+
+#my-form input[type='text'] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #2ecc71;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  border: 0;
+  background: #333;
+  color: #fff;
+  border-radius: 15px;
+  margin: 5px 0;
+}
+
+.btn:hover {
+  background: #444;
+}
+
+.bg-dark {
+  background: #333;
+  color: #fff;
+}
+
+.error {
+  background: orangered;
+  color: #fff;
+  padding: 5px;
+  margin: 5px;
+}
+
+/* Style for the leaderboard container */
+#leaderboard {
+  display: none; /* Hide initially */
+  margin-top: 20px;
+}
+
+/* Style for the leaderboard table */
+#leaderboard table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the leaderboard table header */
+#leaderboard th {
+  background-color: #3498db;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px;
+  text-align: left;
+}
+
+/* Style for the leaderboard table rows */
+#leaderboard td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Alternate row background color for better readability */
+#leaderboard tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Style for the leaderboard heading */
+#leaderboard h1 {
+  background-color: #3498db;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  margin: 0;
+  border-radius: 5px 5px 0 0;
+}
+
+/* Optional: Style for the leaderboard back button */
+#leaderboard #backButton {
+  display: block;
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #2ecc71;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 5px;
+}
+
+/* Optional: Hover effect for the back button */
+#leaderboard #backButton:hover {
+  background-color: #27ae60;
+}
+/* Keep existing styles */
+
+/* Media Queries for responsiveness */
+@media only screen and (max-width: 768px) {
+  /* Adjust container width */
+  .container {
+    width: 90%;
+    max-width: none;
+  }
+
+  /* Adjust form padding */
+  #my-form {
+    padding: 1rem;
+  }
+
+  /* Adjust input fields */
+  #my-form input[type='text'],
+  #my-form input[type='number'],
+  #my-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #2ecc71;
+  }
+
+  /* Adjust button styles */
+  .btn {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin: 5px 0;
+  }
+
+  /* Adjust list item styles */
+  ul li {
+    margin: 5px 0;
+  }
+  
+  /* Adjust leaderboard button */
+  #leaderboardButton {
+    position: static;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+  

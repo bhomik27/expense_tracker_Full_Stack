@@ -3,7 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
-const sequelize = require('./util/database');
+const sequelize = require('./Backend/util/database');
 const axios = require('axios');
 const env = require('dotenv').config();
 const helmet = require('helmet');
@@ -13,19 +13,19 @@ const morgan = require('morgan');
 
 
 
-const userRoutes = require('./routes/user');
-const expenseRoutes = require('./routes/expense');
-const purchaseRoutes = require('./routes/purchase');
-const premiumRoutes = require('./routes/premium');
-const passwordRoutes = require('./routes/password');
+const userRoutes = require('./Backend/routes/user');
+const expenseRoutes = require('./Backend/routes/expense');
+const purchaseRoutes = require('./Backend/routes/purchase');
+const premiumRoutes = require('./Backend/routes/premium');
+const passwordRoutes = require('./Backend/routes/password');
 
 
 
-const Expense = require('./models/expense');
-const User = require('./models/user');
-const Order = require('./models/order');
-const ForgotPasswordRequests = require('./models/ForgotPasswordRequests');
-const downloadedFiles = require('./models/downloadedFiles');
+const Expense = require('./Backend/models/expense');
+const User = require('./Backend/models/user');
+const Order = require('./Backend/models/order');
+const ForgotPasswordRequests = require('./Backend/models/ForgotPasswordRequests');
+const downloadedFiles = require('./Backend/models/downloadedFiles');
 
 const app = express();
 
