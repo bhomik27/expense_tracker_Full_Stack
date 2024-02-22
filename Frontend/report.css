@@ -5,8 +5,8 @@ table,
 button {
     margin: 0;
     padding: 0;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
 }
-
 
 header {
     background: #2ecc71;
@@ -26,7 +26,6 @@ h1 {
     border-radius: 8px;
     padding: 12px 12px 12px 12px;
 }
-
 
 /* Set a common font for better readability */
 body {
@@ -63,7 +62,7 @@ tr:nth-child(even) {
 }
 
 /* Style for the Download button */
-#download {
+#download, #previousDownlaods {
     background-color: #2ecc71; /* Green button background color */
     color: #fff;
     padding: 10px;
@@ -88,21 +87,17 @@ tr:nth-child(even) {
     }
 
     /* Center the button on smaller screens */
-    #download {
+    #download, #previousDownlaods {
         display: block;
         margin: 10px auto;
     }
 }
 
-
-/* Style for the View Previous Downloads button */
-#previousDownlaods {
-    background-color: #d23317; /* Green button background color */
-    color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block;
-    margin: 20px auto; /* Center the button on the page */
+/* Style for the canvas */
+#expensePieChart {
+    max-width: 100%; /* Set a maximum width for the canvas */
+    height: auto; /* Make the canvas height adjust automatically */
+    display: block; /* Ensure the canvas b  ehaves as a block element */
+    margin: 12px auto; /* Center the canvas on the page */
+    max-height: 430px; /* Set a maximum height for the canvas to avoid excessive height */
 }

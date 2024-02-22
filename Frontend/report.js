@@ -93,8 +93,9 @@ document.addEventListener('DOMContentLoaded', function () {
         axios.get('http://localhost:3000/expense/expenses', { headers: { "Authorization": token } })
             .then((response) => {
                 if (response.status === 200) {
-                    const expenseData = response.data.expenses; // Just assign response.data directly
+                    const expenseData = response.data.expenses; 
                     fillExpenseTables(expenseData);
+                    displayPieChart(expenseData);
                 } else {
                     throw new Error(response.data.message);
                 }
@@ -170,6 +171,45 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 console.error(error);
             });
+    }
+
+
+
+    // Function to display the pie chart
+    function displayPieChart(expenseData) {
+        const ctx = document.getElementById('expensePieChart').getContext('2d');
+
+        // Group expenses by category and calculate total expenses for each category
+        const expensesByCategory = {};
+        expenseData.forEach(expense => {
+            if (!expensesByCategory[expense.category]) {
+                expensesByCategory[expense.category] = 0;
+            }
+            expensesByCategory[expense.category] += expense.amount;
+        });
+
+        const categories = Object.keys(expensesByCategory);
+        const amounts = Object.values(expensesByCategory);
+
+        // Create random colors for each category
+        const colors = categories.map(() => '#' + Math.floor(Math.random() * 16777215).toString(16));
+
+        // Create pie chart
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: 'Expense by Category',
+                    data: amounts,
+                    backgroundColor: colors,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
     }
 
 

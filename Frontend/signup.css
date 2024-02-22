@@ -19,6 +19,7 @@ header {
     align-items: center;
     position: relative;
     margin-bottom: 15px;
+    border-radius: 27px;
 }
 
 h1 {

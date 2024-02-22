@@ -10,6 +10,26 @@ body {
     background-color: #2c3e50;
 }
 
+header {
+    background: #2ecc71;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px;
+    border-radius: 27px;
+}
+
+h1 {
+    margin-bottom: 10px;
+    color: white;
+    background-color: #2c3e50;
+    text-align: center;
+    border-radius: 8px;
+    padding: 12px 12px 12px 12px;
+}
 
 .card {
     margin: auto;
@@ -48,10 +68,32 @@ button[type="submit"] { /* Changed to match the button style */
     border-radius: 15px;
     cursor: pointer;
     transition: background 0.3s ease;
+    font-weight: bold; /* Make the font bold */
 }
 
 button[type="submit"]:hover {
     background: #2980b9;
+}
+
+/* Additional styles for signup and forgot password buttons */
+button[type="submit"].signup,
+button[type="submit"].forgot-password {
+    color: white; /* Make the font white */
+    font-weight: bold; /* Make the font bold */
+    margin-top: 15px; /* Add some space between buttons */
+}
+
+button[type="submit"].signup:hover,
+button[type="submit"].forgot-password:hover {
+    opacity: 0.9; /* Reduce opacity on hover */
+}
+p{
+    font-weight: bold;
+    color:#2ecc71;
+}
+
+a{
+    color:#2ecc71;
 }
 
 /* Media Queries for responsiveness */

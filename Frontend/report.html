@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="report.css">
     <title>Expense-Report</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Add Axios -->
-    <script src="./report.js"></script> <!-- Link to external JavaScript file -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+    <script src="./report.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <header id="header">
@@ -16,6 +17,9 @@
 </header>
 
 <body>
+
+    <canvas id="expensePieChart" width="1220" height="1320"></canvas>
+
     <h3>Monthly Report</h3>
     <table class="monthly-table">
         <tr>
