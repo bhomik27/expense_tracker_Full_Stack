@@ -8,7 +8,6 @@ const sendResetPasswordEmail = async (useremail, requestId) => {
     const Client = Sib.ApiClient.instance;
     // const apiKey = Client.authentications['api-key'];
     const apiKey = process.env.SIB_API_KEY;
-
     apiKey.apiKey = process.env.SIB_API_KEY;
 
     const transEmailApi = new Sib.TransactionalEmailsApi();
