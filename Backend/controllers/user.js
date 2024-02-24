@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const  sequelize = require('../util/database');
 
 const generateAccessToken = (id, name) => {
-    return jwt.sign({ userId: id, name: name }, 'irawhseham');
+    return jwt.sign({ userId: id, name: name }, process.env.TOKEN_SECRET);
 };
 
 

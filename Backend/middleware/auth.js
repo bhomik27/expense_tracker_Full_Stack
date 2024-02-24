@@ -9,8 +9,8 @@ const authenticate = async (req, res, next) => {
             return res.status(401).json({ success: false, message: 'Token not provided' });
         }
 
-        const user = jwt.verify(token, 'irawhseham');
-        console.log("USERID <<<<<<<<", user.userId);
+        const user = jwt.verify(token, process.env.TOKEN_SECRET);
+        // console.log("USERID <<<<<<<<", user.userId);
 
         const foundUser = await User.findByPk(user.userId);
 
@@ -29,3 +29,5 @@ const authenticate = async (req, res, next) => {
 module.exports = {
     authenticate
 };
+
+

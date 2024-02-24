@@ -341,11 +341,11 @@ function createLeaderboardTable(leaderboardData) {
 
 // Define global variables for pagination
 let currentPage = 1;
-const limit = 10; // Number of expenses per page
+const limit = 5; // Number of expenses per page
 let totalPages = 0;
 
 // Define a global variable to store the number of expenses per page
-let expensesPerPage = localStorage.getItem('expensesPerPage') || 10;
+let expensesPerPage = localStorage.getItem('expensesPerPage') || 5;
 
 // Function to fetch expenses with pagination
 
