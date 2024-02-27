@@ -63,22 +63,6 @@ sequelize.sync()
     })
     .catch(err => console.log(err));
 
-// Catch-all route handler for 404 errors
-app.use((req, res, next) => {
-    const err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-// Error handling middleware to render 404 page
-app.use((err, req, res, next) => {
-    if (err.status === 404) {
-        res.status(404).sendFile(path.join(__dirname, '../Frontend/404.html'));
-    } else {
-        next(err);
-    }
-});
-
 
 app.use((req, res) => {
     res.sendFile(path.join(__dirname + `../Frontend/${req.url}`));
