@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
 
         // Make an Axios POST request to the backend API
-        axios.post('http://localhost:3000/password/forgotpassword', {
+        axios.post('http://16.170.247.243:3000/password/forgotpassword', {
             email: email
         })
             .then(function (response) {
