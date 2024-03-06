@@ -39,6 +39,11 @@ app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
 app.use('/password', passwordRoutes);
 
+app.use((req, res) => {
+    console.log("url = " , req.url);
+    res.sendFile(path.join(__dirname + `${req.url}`));
+}) 
+
 // Relationship between user and expense table
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -64,6 +69,3 @@ sequelize.sync()
     .catch(err => console.log(err));
 
 
-app.use((req, res) => {
-    res.sendFile(path.join(__dirname + `../Frontend/${req.url}`));
-})
