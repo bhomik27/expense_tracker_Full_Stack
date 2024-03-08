@@ -60,5 +60,4 @@ document.addEventListener('DOMContentLoaded', function () {
 function formsubmitted(e){
     e.preventDefault();
     console.log('called');
-    // Add logic to submit the form using Axios if needed
 }

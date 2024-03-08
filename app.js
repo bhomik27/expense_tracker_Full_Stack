@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
-const cors = require('cors'); 
+const cors = require('cors');
 const sequelize = require('./Backend/util/database');
 const axios = require('axios');
 const env = require('dotenv').config();
@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS for all routes
 app.use(helmet());
-app.use(morgan('combined',{ stream: accessLogStream }));
+app.use(morgan('combined', { stream: accessLogStream }));
 
 // Routes
 app.use('/user', userRoutes);
@@ -39,10 +39,19 @@ app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
 app.use('/password', passwordRoutes);
 
+
 app.use((req, res) => {
-    console.log("url = " , req.url);
-    res.sendFile(path.join(__dirname + `${req.url}`));
-}) 
+    if (req.url == '/') {
+    res.sendFile(path.join(__dirname + `/Frontend/login.html`));
+    }
+})
+
+app.use((req, res) => {
+    console.log("url", req.url);
+    res.sendFile(path.join(__dirname + `/Frontend/${req.url}`));
+})
+
+
 
 // Relationship between user and expense table
 User.hasMany(Expense);
