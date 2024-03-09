@@ -39,18 +39,12 @@ app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
 app.use('/password', passwordRoutes);
 
-
 // app.use((req, res) => {
-//     if (req.url == '/') {
-//     res.sendFile(path.join(__dirname + `/Frontend/login.html`));
-//     }
+//     console.log("url", req.url);
+//     res.sendFile(path.join(__dirname + `/Frontend/${req.url}`));
 // })
 
-app.use((req, res) => {
-    console.log("url", req.url);
-    res.sendFile(path.join(__dirname + `/Frontend/${req.url}`));
-})
-
+app.use(express.static(path.join(__dirname, 'Frontend')));
 
 
 // Relationship between user and expense table
@@ -71,10 +65,21 @@ ForgotPasswordRequests.belongsTo(User);
 
 sequelize.sync()
     .then(() => {
-        app.listen(3000, () => {
-            console.log('Server is running on port 3000');
+        // app.listen(3000, () => {
+        //     console.log('Server is running on port 3000');
+        // });
+
+
+        const port = process.env.PORT || 3000; // Use the provided PORT or default to 3000
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
         });
     })
     .catch(err => console.log(err));
 
 
+    app.use((err, req, res, next) => {
+        console.error(err.stack);
+        res.status(500).send('Something went wrong!');
+    });
+    
