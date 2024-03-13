@@ -57,7 +57,7 @@
                 localStorage.setItem('token', response.data.token);
 
                 // Redirect to expense.html after successful login
-                window.location.href = 'expense.html';
+                window.location.href = '../expense/expense.html';
 
 
             } catch (error) {

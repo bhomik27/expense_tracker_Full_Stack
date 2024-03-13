@@ -85,7 +85,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     document.getElementById('premiumStatus').appendChild(report_btn);
 
     report_btn.onclick = async function () {
-        window.location.href = 'report.html';
+        window.location.href = '../report/report.html';
     };
     await fetchExpenses(currentPage, limit);
 
