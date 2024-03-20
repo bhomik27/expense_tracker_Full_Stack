@@ -6,7 +6,7 @@ const cors = require('cors');
 const sequelize = require('./Backend/util/database');
 const axios = require('axios');
 const env = require('dotenv').config();
-const helmet = require('helmet');
+//const helmet = require('helmet');
 const morgan = require('morgan');
 
 const userRoutes = require('./Backend/routes/user');
@@ -29,7 +29,7 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS for all routes
-app.use(helmet());
+//app.use(helmet()); 
 app.use(morgan('combined', { stream: accessLogStream }));
 
 // Routes
@@ -39,12 +39,12 @@ app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
 app.use('/password', passwordRoutes);
 
-// app.use((req, res) => {
-//     console.log("url", req.url);
-//     res.sendFile(path.join(__dirname + `/Frontend/${req.url}`));
-// })
+app.use((req, res) => {
+    console.log("url", req.url);
+    res.sendFile(path.join(__dirname + `/Frontend/${req.url}`));
+})
 
-app.use(express.static(path.join(__dirname, 'Frontend')));
+//app.use(express.static(path.join(__dirname, 'Frontend')));
 
 
 // Relationship between user and expense table
@@ -65,14 +65,8 @@ ForgotPasswordRequests.belongsTo(User);
 
 sequelize.sync()
     .then(() => {
-        // app.listen(3000, () => {
-        //     console.log('Server is running on port 3000');
-        // });
-
-
-        const port = process.env.PORT || 3000; // Use the provided PORT or default to 3000
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
+        app.listen(3000, () => {
+            console.log('Server is running on port 3000');
         });
     })
     .catch(err => console.log(err));
