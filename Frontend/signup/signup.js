@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 password
             };
 
-            const response = await axios.post("http://16.170.247.243:3000/user/signup", signupData);
+            const response = await axios.post("http://16.170.11.119:3000/user/signup", signupData);
 
             console.log(response.data); // Logging response data
 

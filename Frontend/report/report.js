@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const token = localStorage.getItem('token');
 
-        axios.get('http://16.170.247.243:3000/user/download', { headers: { "Authorization": token } })
+        axios.get('http://16.170.11.119:3000/user/download', { headers: { "Authorization": token } })
             .then((response) => {
                 if (response.status === 200) {
                     // The backend is essentially sending a download file
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function fetchExpenseData() {
         const token = localStorage.getItem('token');
 
-        axios.get('http://16.170.247.243:3000/expense/expenses', { headers: { "Authorization": token } })
+        axios.get('http://16.170.11.119:3000/expense/expenses', { headers: { "Authorization": token } })
             .then((response) => {
                 if (response.status === 200) {
                     const expenseData = response.data.expenses; 
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //     console.log("Prev Dwnld Button clicked");
 
-    //     axios.get('http://16.170.247.243:3000/user/getallfiles', { headers: { "Authorization": token } })
+    //     axios.get('http://16.170.11.119:3000/user/getallfiles', { headers: { "Authorization": token } })
     //         .then(response => {
     //             console.log(response.data);
     //         })
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         console.log("Prev Dwnld Button clicked");
 
-        axios.get('http://16.170.247.243:3000/user/getallfiles', { headers: { "Authorization": token } })
+        axios.get('http://16.170.11.119:3000/user/getallfiles', { headers: { "Authorization": token } })
             .then(response => {
                 console.log(response.data);
 

@@ -40,7 +40,7 @@
                     password
                 };
 
-                const response = await axios.post("http://16.170.247.243:3000/user/login", loginData);
+                const response = await axios.post("http://16.170.11.119:3000/user/login", loginData);
 
                 console.log(response.data); // Logging response data
 

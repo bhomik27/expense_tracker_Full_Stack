@@ -44,7 +44,7 @@ async function addExpense(event) {
 
         const token = localStorage.getItem('token');
 
-        const response = await axios.post("http://16.170.247.243:3000/expense/add-expense", userExpense, { headers: { "Authorization": token } });
+        const response = await axios.post("http://16.170.11.119:3000/expense/add-expense", userExpense, { headers: { "Authorization": token } });
 
         printUserExpense(response.data);
         showMessage('Expense added successfully!', true);
@@ -66,7 +66,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // const token = localStorage.getItem('token');
     // try {
-    //     const response = await axios.get("http://16.170.247.243:3000/expense/expenses", { headers: { "Authorization": token } });
+    //     const response = await axios.get("http://16.170.11.119:3000/expense/expenses", { headers: { "Authorization": token } });
     //     console.log(response);
 
     //     for (var i = 0; i < response.data.length; i++) {
@@ -109,7 +109,7 @@ function printUserExpense(userExpense) {
     deleteButton.onclick = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://16.170.247.243:3000/expense/delete-expense/${userExpense.id}`, { headers: { "Authorization": token } });
+            await axios.delete(`http://16.170.11.119:3000/expense/delete-expense/${userExpense.id}`, { headers: { "Authorization": token } });
             childElement.classList.add('slide-out'); // Add class for sliding out
             // Delay removal to allow transition to complete
             setTimeout(() => {
@@ -142,7 +142,7 @@ function printUserExpense(userExpense) {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://16.170.247.243:3000/expense/edit-expense/${userExpense.id}`, updatedUserExpenseData, { headers: { "Authorization": token } });
+            await axios.put(`http://16.170.11.119:3000/expense/edit-expense/${userExpense.id}`, updatedUserExpenseData, { headers: { "Authorization": token } });
             // Update UI with updated expense details
             childElement.innerHTML = `Amount: ${updatedUserExpenseData.amount} <br> Description: ${updatedUserExpenseData.description} <br> Category: ${updatedUserExpenseData.category} <br>`;
             childElement.appendChild(deleteButton);
@@ -168,7 +168,7 @@ function printUserExpense(userExpense) {
 document.getElementById('premiumButton').onclick = async function (e) {
     const token = localStorage.getItem('token');
     try {
-        const response = await axios.get("http://16.170.247.243:3000/purchase/premiummembership", {
+        const response = await axios.get("http://16.170.11.119:3000/purchase/premiummembership", {
             headers: { "Authorization": token }
         });
         console.log(response);
@@ -178,7 +178,7 @@ document.getElementById('premiumButton').onclick = async function (e) {
             "order_id": response.data.order.id,
             "handler": async function (response) {
                 try {
-                    await axios.post('http://16.170.247.243:3000/purchase/updatetransactionstatus', {
+                    await axios.post('http://16.170.11.119:3000/purchase/updatetransactionstatus', {
                         order_id: options.order_id,
                         payment_id: response.razorpay_payment_id,
                     }, {
@@ -217,7 +217,7 @@ document.getElementById('premiumButton').onclick = async function (e) {
 async function checkPremiumStatus() {
     const token = localStorage.getItem('token');
     try {
-        const response = await axios.get("http://16.170.247.243:3000/user/premium-status", {
+        const response = await axios.get("http://16.170.11.119:3000/user/premium-status", {
             headers: { "Authorization": token }
         });
 
@@ -276,7 +276,7 @@ async function showLeaderboard() {
 
     const token = localStorage.getItem('token');
     try {
-        const leaderboardArray = await axios.get('http://16.170.247.243:3000/premium/showleaderboard', { headers: { "Authorization": token } });
+        const leaderboardArray = await axios.get('http://16.170.11.119:3000/premium/showleaderboard', { headers: { "Authorization": token } });
         console.log(leaderboardArray);
 
         // Clear the leaderboard container
@@ -358,7 +358,7 @@ async function fetchExpenses(page, limit) {
         const token = localStorage.getItem('token');
 
         // Fetch expenses with the updated limit
-        const response = await axios.get(`http://16.170.247.243:3000/expense/expenses?page=${page}&limit=${limit}`, {
+        const response = await axios.get(`http://16.170.11.119:3000/expense/expenses?page=${page}&limit=${limit}`, {
             headers: { "Authorization": token }
         });
 
