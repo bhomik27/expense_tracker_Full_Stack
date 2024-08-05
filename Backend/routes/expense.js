@@ -10,10 +10,11 @@ router.get('/expenses', userauthentication.authenticate , expenseController.getE
 
 router.post('/add-expense', userauthentication.authenticate, expenseController.postAddExpense);
 
-router.delete('/delete-expense/:id', userauthentication.authenticate, expenseController.deleteExpense);
+router.delete('/delete-expense/:_id', userauthentication.authenticate, expenseController.deleteExpense);
 
-router.put('/edit-expense/:id', userauthentication.authenticate, expenseController.editExpense);
+router.put('/edit-expense/:_id', userauthentication.authenticate, expenseController.editExpense);
 
 
 module.exports = router;
 
+    

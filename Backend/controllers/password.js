@@ -1,3 +1,5 @@
+
+
 const ForgotPassword = require('../models/ForgotPasswordRequests');
 const User = require('../models/user');
 const uuidv4 = require('uuid').v4;
@@ -40,7 +42,7 @@ const forgotpassword = async (req, res) => {
         }
 
         const requestId = uuidv4();
-        const forgotpassword = await ForgotPassword.create({ id: requestId, userId: user.id, isactive: true });
+        const forgotpassword = await ForgotPassword.create({ _id: requestId, userId: user._id, isactive: true });
 
         const resetPasswordLink = `http://localhost:3000/password/resetpassword/${requestId}`;
         await sendResetPasswordEmail(useremail, requestId);
@@ -54,9 +56,9 @@ const forgotpassword = async (req, res) => {
 
 const resetpassword = async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = req.params._id;
         const forgotpasswordrequest = await ForgotPassword.findOne({
-            where: { id, isactive: true }
+            where: { _id, isactive: true }
         });
 
         if (forgotpasswordrequest) {
@@ -126,7 +128,7 @@ const resetpassword = async (req, res) => {
                 <div class="container">
                     <div class="card">
                         <div class="card-body">
-                            <form action="/password/updatepassword/${id}" method="post" class="reset-password-form">
+                            <form action="/password/updatepassword/${_id}" method="post" class="reset-password-form">
                                 <h2>Reset Your Password</h2>
                                 <div class="form-group">    
                                     <label for="newpassword">Enter New Password</label>
@@ -156,11 +158,11 @@ const updatepassword = async (req, res) => {
         const { resetpasswordid } = req.params;
 
         const resetpasswordrequest = await ForgotPassword.findOne({
-            where: { id: resetpasswordid, isactive: true }
+            where: { _id: resetpasswordid, isactive: true }
         });
 
         if (resetpasswordrequest) {
-            const user = await User.findOne({ where: { id: resetpasswordrequest.userId } });
+            const user = await User.findOne({ where: { _id: resetpasswordrequest.userId } });
 
             if (user) {
                 const saltRounds = 10;

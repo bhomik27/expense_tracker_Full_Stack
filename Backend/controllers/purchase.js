@@ -21,7 +21,7 @@ const purchasepremium = async (req, res) => {
                 return res.status(500).json({ message: 'Transaction creation failed', error: err });
             }
 
-            await req.user.createOrder({ orderid: order.id, status: 'PENDING' }, { transaction: t });
+            await req.user.createOrder({ orderid: order._id, status: 'PENDING' }, { transaction: t });
             
             await t.commit();
 
