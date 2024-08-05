@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 password
             };
 
-            const response = await axios.post("http://16.170.11.119:3000/user/signup", signupData);
+            const response = await axios.post("http://localhost:3000/user/signup", signupData);
 
             console.log(response.data); // Logging response data
 
@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const successMessage = document.getElementById('successMessage');
             successMessage.textContent = response.data.message;
 
-            // Optionally, redirect the user to another page after successful signup
-            // window.location.href = '/success'; // Redirect to success page
 
         } catch (error) {
             if (error.response.status === 409) {

@@ -12,10 +12,10 @@ router.post('/signup',  UserController.signup);
 router.post('/login',  UserController.login);
 
 // Define route for checking premium status
-router.get('/premium-status', UserController.checkPremiumStatus);
+router.get('/premium-status', userauthentication.authenticate,UserController.checkPremiumStatus);
 
 router.get('/download', userauthentication.authenticate, expenseController.downloadExpense);
 
-router.get('/getallfiles', userauthentication.authenticate, expenseController.GetAllFiles);
+router.get('/getallfiles', userauthentication.authenticate, expenseController.getAllFiles);
 
 module.exports = router;
